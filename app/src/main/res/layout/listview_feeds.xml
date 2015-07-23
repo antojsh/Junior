@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layoutnoticias"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+<LinearLayout
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/layout_rounded"
+        android:layout_marginBottom="15dp"
+        android:orientation="vertical">
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="180dp"
+            android:id="@+id/imagenoticia"
+            android:scaleType="centerCrop"
+            android:gravity="center"/>
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+
+            android:padding="5dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:id="@+id/titulonoticia"
+                android:textColor="#D2D2D2"/>
+        </LinearLayout>
+        <LinearLayout
+            android:padding="7dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#D2D2D2"
+                ></TextView> </LinearLayout>
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="30dp"
+
+            android:orientation="horizontal"
+            android:layout_marginLeft="5dp">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/like"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="20dp"/>
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+
+                android:src="@drawable/comentar"/>
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="5dp"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="24 junio 2015"
+                    android:layout_gravity="center_vertical"
+                    android:textColor="#D2D2D2"
+                    android:id="@+id/parrafo"
+                    />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+
+
+
+    </LinearLayout>
+
+
+
+</LinearLayout>
+</android.support.v4.widget.SwipeRefreshLayout>
