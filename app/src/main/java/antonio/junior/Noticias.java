@@ -1,8 +1,8 @@
 package antonio.junior;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceActivity;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -12,17 +12,13 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+
 import org.apache.http.Header;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
-
-import com.loopj.android.http.*;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -30,7 +26,7 @@ import java.io.StringReader;
 public class Noticias extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     SwipeRefreshLayout swipeLayout;
     ListView list;
-    LazyImageLoadAdapter adapter;
+    //LazyImageLoadAdapter adapter;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -39,38 +35,37 @@ public class Noticias extends Fragment implements SwipeRefreshLayout.OnRefreshLi
 
         swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.layoutnoticias);
         swipeLayout.setOnRefreshListener(this);
-      list= (ListView) rootView.findViewById(R.id.list);
+      /*list= (ListView) rootView.findViewById(R.id.list);
 
         adapter= new LazyImageLoadAdapter(this.getActivity(),strings);
-        list.setAdapter(adapter);
+        list.setAdapter(adapter);*/
        loadFeed();
         return rootView;
     }
 
     private void loadFeed() {
+        ProgressDialog progress;
+        progress = ProgressDialog.show(this.getActivity(), "Cargando",
+                "Espera Miestras se cargan las noticias", true);
         AsyncHttpClient client = new AsyncHttpClient();
         client.get("http://juniorfc.co/feed/", new AsyncHttpResponseHandler() {
-
-            @Override
-            public void onStart() {
-                // called before request is started
-            }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 if (statusCode == 200) {
                     String result = new String(responseBody);
-
+                    Log.d("************ ", "TODO SALIO BIEN");
                     parserXML(result);
                 }
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-
+                Log.d("************ ","TODO SALIO MAL");
             }
 
         });
+        progress.dismiss();
     }
 
     private void parserXML(String result) {
@@ -83,16 +78,24 @@ public class Noticias extends Fragment implements SwipeRefreshLayout.OnRefreshLi
             String value = null;
 
             while(xpp.getEventType() !=XmlPullParser.END_DOCUMENT){ // loop from the beginning to the end of the XML document
-
+                String titulo="";
+                String Descripcion="";
                 if(xpp.getEventType()==XmlPullParser.START_TAG){
 
                     if(xpp.getName().equals("title")){
-                        //Log.d("****", result);
-                        Toast.makeText(this.getActivity(), xpp.nextText(), Toast.LENGTH_LONG).show();
-                        // start tag : <version>
-                        // do some stuff here, like preparing an
-                        // object/variable to recieve the value "1" of the version tag
+                        //Toast.makeText(this.getActivity(), xpp.nextText(), Toast.LENGTH_LONG).show();
+                        titulo =xpp.nextText().toString();
                     }
+                    if(xpp.getName().equals("encoded")){
+
+                        //String[] separated = android.text.Html.fromHtml(xpp.nextText()).toString().split("Read More");
+                        String [] imgTemp = xpp.nextText().toString().split("href=\"");
+                        String [] imgFinal = imgTemp[1].split("\">");
+                        //Descripcion= separated[0].toString();
+                        Toast.makeText(this.getActivity(),imgFinal[0], Toast.LENGTH_LONG).show();
+                    }
+
+
                 }
                 else if(xpp.getEventType()==XmlPullParser.END_TAG){
 
@@ -114,6 +117,7 @@ public class Noticias extends Fragment implements SwipeRefreshLayout.OnRefreshLi
 
     }
 
+
     @Override
     public void onRefresh() {
         new Handler().postDelayed(new Runnable() {
@@ -123,39 +127,6 @@ public class Noticias extends Fragment implements SwipeRefreshLayout.OnRefreshLi
             }
         }, 5000);
     }
-     String[] strings = {
-            "http://androidexample.com/media/webservice/LazyListView_images/image0.png",
-            "http://androidexample.com/media/webservice/LazyListView_images/image1.png",
-            "http://androidexample.com/media/webservice/LazyListView_images/image2.png",
-            "http://androidexample.com/media/webservice/LazyListView_images/image3.png",
-            "http://androidexample.com/media/webservice/LazyListView_images/image4.png",
-            "http://androidexample.com/media/webservice/LazyListView_images/image5.png",
-            "http://androidexample.com/media/webservice/LazyListView_images/image6.png",
-            "http://androidexample.com/media/webservice/LazyListView_images/image7.png",
-            "http://androidexample.com/media/webservice/LazyListView_images/image8.png",
-            "http://androidexample.com/media/webservice/LazyListView_images/image9.png",
-            "http://androidexample.com/media/webservice/LazyListView_images/image10.png",
-            "http://androidexample.com/media/webservice/LazyListView_images/image0.png",
-            "http://androidexample.com/media/webservice/LazyListView_images/image1.png",
-            "http://androidexample.com/media/webservice/LazyListView_images/image2.png",
-            "http://androidexample.com/media/webservice/LazyListView_images/image3.png",
-            "http://androidexample.com/media/webservice/LazyListView_images/image4.png",
-            "http://androidexample.com/media/webservice/LazyListView_images/image5.png",
-            "http://androidexample.com/media/webservice/LazyListView_images/image6.png",
-            "http://androidexample.com/media/webservice/LazyListView_images/image7.png",
-            "http://androidexample.com/media/webservice/LazyListView_images/image8.png",
-            "http://androidexample.com/media/webservice/LazyListView_images/image9.png",
-            "http://androidexample.com/media/webservice/LazyListView_images/image10.png",
-            "http://androidexample.com/media/webservice/LazyListView_images/image0.png",
-            "http://androidexample.com/media/webservice/LazyListView_images/image1.png",
-            "http://androidexample.com/media/webservice/LazyListView_images/image2.png",
-            "http://androidexample.com/media/webservice/LazyListView_images/image3.png",
-            "http://androidexample.com/media/webservice/LazyListView_images/image4.png",
-            "http://androidexample.com/media/webservice/LazyListView_images/image5.png",
-            "http://androidexample.com/media/webservice/LazyListView_images/image6.png",
-            "http://androidexample.com/media/webservice/LazyListView_images/image7.png",
-            "http://androidexample.com/media/webservice/LazyListView_images/image8.png",
-            "http://androidexample.com/media/webservice/LazyListView_images/image9.png",
-            "http://androidexample.com/media/webservice/LazyListView_images/image10.png" };
 
-}
+
+        }
